@@ -101,7 +101,6 @@ namespace O9K.AIO.Heroes.Invoker.Modes
             var invoke = Owner.Hero.Abilities.FirstOrDefault(x => x.Id == AbilityId.invoker_invoke);
             if (invoke == null || !invoke.CanBeCasted())
             {
-                Console.WriteLine($"{invoke?.CanBeCasted()}");
                 return;
             }
 
@@ -111,7 +110,6 @@ namespace O9K.AIO.Heroes.Invoker.Modes
                 var item = keyValue.Value;
                 if (item.Enable && item.InvokeKey.IsActive)
                 {
-                    Console.WriteLine($"Execute {id}");
                     var ability = Owner.Hero.Abilities.FirstOrDefault(x => x.Id == id) as IInvokableAbility;
                     if (ability is not {CanBeInvoked: true})
                         return;
