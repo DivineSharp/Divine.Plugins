@@ -49,10 +49,11 @@ namespace O9K.AIO.Heroes.Invoker.Modes
 
         private void PlayerOnOnExecuteOrder(OrderAddingEventArgs args)
         {
-            if (Owner.Hero.IsInvisible)
-            {
+            if (inChanging.IsSleeping)
                 return;
-            }
+            
+            if (Owner.Hero.IsInvisible)
+                return;
 
             var order = args.Order.Type;
             if (order == OrderType.Cast && !args.IsCustom)
@@ -61,8 +62,8 @@ namespace O9K.AIO.Heroes.Invoker.Modes
                 if (abilityId is AbilityId.invoker_quas or AbilityId.invoker_wex or AbilityId.invoker_exort or AbilityId.invoker_invoke or AbilityId.invoker_ghost_walk)
                 {
                     sleeper.Sleep(1.5f);
-                    multySleeper.Sleep("attack", 1.250f);
-                    multySleeper.Sleep("move", 1.250f);
+                    multySleeper.Sleep("attack", 2.5f);
+                    multySleeper.Sleep("move", 2.5f);
                 }
             }
 
@@ -72,7 +73,7 @@ namespace O9K.AIO.Heroes.Invoker.Modes
             {
                 if (multySleeper.IsSleeping("attack"))
                     return;
-                multySleeper.Sleep("attack", .250f);
+                multySleeper.Sleep("attack", .550f);
                 var countOfModifiers =
                     Owner.Hero.BaseModifiers.Count(x => x.Name == $"modifier_{AbilityId.invoker_exort}_instance");
                 if (countOfModifiers >= 3) return;
@@ -87,7 +88,7 @@ namespace O9K.AIO.Heroes.Invoker.Modes
             {
                 if (multySleeper.IsSleeping("move"))
                     return;
-                multySleeper.Sleep("move", .250f);
+                multySleeper.Sleep("move", .550f);
 
                 var activeSphereForMove = Owner.Hero.Abilities.FirstOrDefault(x => x.Id == AbilityId.invoker_wex);
                 if (Owner.Hero.HealthPercentage / 100f <= HpSlider.Value / 100f)
@@ -101,7 +102,7 @@ namespace O9K.AIO.Heroes.Invoker.Modes
                         Owner.Hero.BaseModifiers.Count(x => x.Name == $"modifier_{activeSphereForMove.Id}_instance");
                     if (countOfModifiers >= 3) return;
                     for (var i = countOfModifiers; i < 3; i++) activeSphereForMove.BaseAbility.Cast();
-                    inChanging.Sleep(.250f);
+                    inChanging.Sleep(.350f);
                 }
             }
         }

@@ -181,6 +181,8 @@
     <Compile Include="Heroes\Invoker\Abilities\SunStrikeAbility.cs" />
     <Compile Include="Heroes\Invoker\Abilities\TornadoAbility.cs" />
     <Compile Include="Heroes\Invoker\InvokerBase.cs" />
+    <Compile Include="Heroes\Invoker\Modes\AbilityPanelMode.cs" />
+    <Compile Include="Heroes\Invoker\Modes\AbilityPanelModeMenu.cs" />
     <Compile Include="Heroes\Invoker\Modes\AutoGhostWalkMode.cs" />
     <Compile Include="Heroes\Invoker\Modes\AutoGhostWalkModeMenu.cs" />
     <Compile Include="Heroes\Invoker\Modes\AutoSunStrikeMode.cs" />
