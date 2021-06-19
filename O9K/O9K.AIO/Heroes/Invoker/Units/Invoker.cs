@@ -133,7 +133,6 @@ namespace O9K.AIO.Heroes.Invoker.Units
 
         public override bool Combo(TargetManager.TargetManager targetManager, ComboModeMenu comboModeMenu)
         {
-            Console.WriteLine("IN COMBO");
             var abilityHelper = new InvokerAbilityHelper(targetManager, comboModeMenu, this);
             if (abilityHelper.UseAbility(blink, 550, 350))
             {
@@ -307,7 +306,6 @@ namespace O9K.AIO.Heroes.Invoker.Units
 
             if (abilityHelper.UseAbilityIfCondition(blast))
             {
-                Console.WriteLine("blast casted");
                 return true;
             }
 
