@@ -319,7 +319,6 @@ namespace O9K.AIO.Heroes.Invoker.Units
 
             if (meteorLaunched.IsSleeping)
             {
-                Console.WriteLine($"метеори запущен, ждем бласт? {abilityHelper.CanBeCasted(blast, false, false, false, true)}");
                 if (abilityHelper.CanBeCasted(blast, false, false, false, true))
                 {
                     return false;
