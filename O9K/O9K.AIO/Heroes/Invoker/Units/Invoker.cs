@@ -47,8 +47,10 @@ namespace O9K.AIO.Heroes.Invoker.Units
         private AoeAbility emp;
         private TornadoAbility tornado;
         private MeteorAbility meteor;
+
         private SunStrikeAbility sunStrike;
-        private UntargetableAbility iceWall;
+
+        // private UntargetableAbility iceWall;
         private BlastAbility blast;
         private DisableAbility coldSnap;
         private UntargetableAbility invoke;
@@ -117,7 +119,7 @@ namespace O9K.AIO.Heroes.Invoker.Units
                 {AbilityId.invoker_tornado, x => tornado = new TornadoAbility(x)},
                 {AbilityId.invoker_chaos_meteor, x => meteor = new MeteorAbility(x)},
                 {AbilityId.invoker_sun_strike, x => sunStrike = new SunStrikeAbility(x)},
-                {AbilityId.invoker_ice_wall, x => iceWall = new UntargetableAbility(x)},
+                // {AbilityId.invoker_ice_wall, x => iceWall = new UntargetableAbility(x)},
                 {AbilityId.item_refresher, x => this.refresher = new RefresherAbility(x)},
                 {AbilityId.invoker_deafening_blast, x => this.blast = new BlastAbility(x)},
                 {AbilityId.item_refresher_shard, x => this.refresherShard = new RefresherAbility(x)},
@@ -183,14 +185,14 @@ namespace O9K.AIO.Heroes.Invoker.Units
             if (target == null)
                 return false;
 
-            if (!meteorLaunched.IsSleeping && abilityHelper.UseAbilityIfCondition(this.euls, sunStrike, meteor, iceWall, emp))
+            if (!meteorLaunched.IsSleeping && abilityHelper.UseAbilityIfCondition(this.euls, sunStrike, meteor, /*iceWall, */emp))
             {
                 // Console.WriteLine($"euls casted: {euls.Ability.GetHitTime(target)}");
                 ComboSleeper.Sleep(euls.Ability.GetHitTime(target));
                 return true;
             }
 
-            if (!meteorLaunched.IsSleeping && abilityHelper.UseAbilityIfCondition(this.tornado, sunStrike, meteor, iceWall, emp))
+            if (!meteorLaunched.IsSleeping && abilityHelper.UseAbilityIfCondition(this.tornado, sunStrike, meteor, /*iceWall,*/ emp))
             {
                 // Console.WriteLine($"tornado casted: {tornado.Ability.GetHitTime(target)}");
                 ComboSleeper.Sleep(tornado.Ability.GetHitTime(target));
@@ -231,7 +233,7 @@ namespace O9K.AIO.Heroes.Invoker.Units
 
             var meteorHitTime = meteor.Ability.GetCastDelay(target) + meteor.Ability.ActivationDelay;
             // Console.WriteLine($"meteorHitTime: {meteorHitTime}");
-            
+
             if (duration > meteorHitTime)
             {
                 if (abilityHelper.CanBeCasted(meteor, false, false))
@@ -268,7 +270,7 @@ namespace O9K.AIO.Heroes.Invoker.Units
                             return false;
                         }
                     }
-                    
+
                     if (!abilityHelper.IsInvoked(blast) && abilityHelper.CanBeCasted(blast, false, false))
                     {
                         // Console.WriteLine($"blast: не инвокнут но можно кастовать");
@@ -295,6 +297,7 @@ namespace O9K.AIO.Heroes.Invoker.Units
                     // Console.WriteLine($"meteor: В кд");
                 }
             }
+
             // Console.WriteLine($"meteor");
             if (abilityHelper.UseAbilityIfCondition(meteor))
             {
@@ -312,6 +315,15 @@ namespace O9K.AIO.Heroes.Invoker.Units
             {
                 // Console.WriteLine($"sunStrike: casted");
                 return true;
+            }
+
+            if (meteorLaunched.IsSleeping)
+            {
+                Console.WriteLine($"метеори запущен, ждем бласт? {abilityHelper.CanBeCasted(blast, false, false, false, true)}");
+                if (abilityHelper.CanBeCasted(blast, false, false, false, true))
+                {
+                    return false;
+                }
             }
 
             if (abilityHelper.UseInvokedAbilityIfCondition(emp))
@@ -371,7 +383,7 @@ namespace O9K.AIO.Heroes.Invoker.Units
             {
                 return true;
             }
-            
+
             return false;
         }
     }

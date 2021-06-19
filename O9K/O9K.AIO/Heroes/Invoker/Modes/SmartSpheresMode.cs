@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Divine;
 using O9K.AIO.Heroes.Base;
 using O9K.AIO.Modes.Base;
@@ -14,7 +15,10 @@ namespace O9K.AIO.Heroes.Invoker.Modes
         private readonly Sleeper inChanging = new();
         private readonly MultiSleeper<string> multySleeper = new();
         private readonly SmartSpheresModeModeMenu modeMenu;
-        private MenuSlider HpSlider => modeMenu.hpSlider;
+        private MenuSlider HpSlider => modeMenu.HpSlider;
+        private MenuAbilityPriorityChanger OnAttackAbility => modeMenu.OnAttackAbility;
+        private MenuAbilityPriorityChanger OnMoveAbility => modeMenu.OnMoveAbility;
+        private MenuSwitcher UseHpDetection => modeMenu.UseHpDetection;
 
         public SmartSpheresMode(BaseHero baseHero, SmartSpheresModeModeMenu menu)
             : base(baseHero)
@@ -51,7 +55,7 @@ namespace O9K.AIO.Heroes.Invoker.Modes
         {
             if (inChanging.IsSleeping)
                 return;
-            
+
             if (Owner.Hero.IsInvisible)
                 return;
 
@@ -74,14 +78,35 @@ namespace O9K.AIO.Heroes.Invoker.Modes
                 if (multySleeper.IsSleeping("attack"))
                     return;
                 multySleeper.Sleep("attack", .550f);
-                var countOfModifiers =
-                    Owner.Hero.BaseModifiers.Count(x => x.Name == $"modifier_{AbilityId.invoker_exort}_instance");
-                if (countOfModifiers >= 3) return;
-                var activeSphereForAttack = Owner.Hero.Abilities.FirstOrDefault(x => x.Id == AbilityId.invoker_exort);
-                if (activeSphereForAttack?.CanBeCasted() == true)
+
+                if (UseHpDetection)
                 {
-                    for (var i = countOfModifiers; i < 3; i++) activeSphereForAttack.BaseAbility.Cast();
-                    inChanging.Sleep(.250f);
+                    var countOfModifiers =
+                        Owner.Hero.BaseModifiers.Count(x => x.Name == $"modifier_{AbilityId.invoker_exort}_instance");
+                    if (countOfModifiers >= 3) return;
+                    var activeSphereForAttack = Owner.Hero.Abilities.FirstOrDefault(x => x.Id == AbilityId.invoker_exort);
+                    if (activeSphereForAttack?.CanBeCasted() == true)
+                    {
+                        for (var i = countOfModifiers; i < 3; i++) activeSphereForAttack.BaseAbility.Cast();
+                        inChanging.Sleep(.250f);
+                    }
+                }
+                else
+                {
+                    var targetAbility = OnAttackAbility.Abilities.FirstOrDefault(z => Owner.Hero.Abilities.FirstOrDefault(x => x.Id == (AbilityId) Enum.Parse(typeof(AbilityId), z) && x.Level > 0) != null);
+                    if (targetAbility == null)
+                    {
+                        return;
+                    }
+                    var countOfModifiers =
+                        Owner.Hero.BaseModifiers.Count(x => x.Name == $"modifier_{OnAttackAbility.Abilities.FirstOrDefault()}_instance");
+                    if (countOfModifiers >= 3) return;
+                    var activeSphereForAttack = Owner.Hero.Abilities.FirstOrDefault(x => x.Id == (AbilityId) Enum.Parse(typeof(AbilityId), targetAbility));
+                    if (activeSphereForAttack?.CanBeCasted() == true)
+                    {
+                        for (var i = countOfModifiers; i < 3; i++) activeSphereForAttack.BaseAbility.Cast();
+                        inChanging.Sleep(.250f);
+                    }
                 }
             }
             else if (order is OrderType.MovePosition or OrderType.MoveTarget)
@@ -90,19 +115,40 @@ namespace O9K.AIO.Heroes.Invoker.Modes
                     return;
                 multySleeper.Sleep("move", .550f);
 
-                var activeSphereForMove = Owner.Hero.Abilities.FirstOrDefault(x => x.Id == AbilityId.invoker_wex);
-                if (Owner.Hero.HealthPercentage / 100f <= HpSlider.Value / 100f)
+                if (UseHpDetection)
                 {
-                    activeSphereForMove = Owner.Hero.Abilities.FirstOrDefault(x => x.Id == AbilityId.invoker_quas);
-                }
+                    var activeSphereForMove = Owner.Hero.Abilities.FirstOrDefault(x => x.Id == AbilityId.invoker_wex);
+                    if (Owner.Hero.HealthPercentage / 100f <= HpSlider.Value / 100f)
+                    {
+                        activeSphereForMove = Owner.Hero.Abilities.FirstOrDefault(x => x.Id == AbilityId.invoker_quas);
+                    }
 
-                if (activeSphereForMove is not null && activeSphereForMove.CanBeCasted())
+                    if (activeSphereForMove is not null && activeSphereForMove.CanBeCasted())
+                    {
+                        var countOfModifiers =
+                            Owner.Hero.BaseModifiers.Count(x => x.Name == $"modifier_{activeSphereForMove.Id}_instance");
+                        if (countOfModifiers >= 3) return;
+                        for (var i = countOfModifiers; i < 3; i++) activeSphereForMove.BaseAbility.Cast();
+                        inChanging.Sleep(.350f);
+                    }
+                }
+                else
                 {
-                    var countOfModifiers =
-                        Owner.Hero.BaseModifiers.Count(x => x.Name == $"modifier_{activeSphereForMove.Id}_instance");
-                    if (countOfModifiers >= 3) return;
-                    for (var i = countOfModifiers; i < 3; i++) activeSphereForMove.BaseAbility.Cast();
-                    inChanging.Sleep(.350f);
+                    var targetAbility = OnMoveAbility.Abilities.FirstOrDefault(z => Owner.Hero.Abilities.FirstOrDefault(x => x.Id == (AbilityId) Enum.Parse(typeof(AbilityId), z) && x.Level > 0) != null);
+                    if (targetAbility == null)
+                    {
+                        return;
+                    }
+                    var activeSphereForMove = Owner.Hero.Abilities.FirstOrDefault(x => x.Id == (AbilityId) Enum.Parse(typeof(AbilityId), targetAbility));
+
+                    if (activeSphereForMove is not null && activeSphereForMove.CanBeCasted())
+                    {
+                        var countOfModifiers =
+                            Owner.Hero.BaseModifiers.Count(x => x.Name == $"modifier_{activeSphereForMove.Id}_instance");
+                        if (countOfModifiers >= 3) return;
+                        for (var i = countOfModifiers; i < 3; i++) activeSphereForMove.BaseAbility.Cast();
+                        inChanging.Sleep(.350f);
+                    }
                 }
             }
         }

@@ -15,7 +15,9 @@ namespace O9K.AIO.Heroes.Invoker.Modes
         public MenuSwitcher Ignore { get; set; }
 
         public MenuSwitcher UseAfter { get; set; }
-        // public MenuSwitcher ReInvoke { get; set; }
+
+        public MenuSwitcher UseIfInvoked { get; set; }
+        public MenuSwitcher ReInvoke { get; set; }
     }
 
     internal class AbilityPanelModeMenu : PermanentModeMenu
@@ -31,6 +33,7 @@ namespace O9K.AIO.Heroes.Invoker.Modes
             isVisible = panel.Add(new MenuSwitcher("Show"));
             PanelPositionX = panel.Add(new MenuSlider("pos x", 500, 0, 3000));
             PanelPositionY = panel.Add(new MenuSlider("pos y", 500, 0, 3000));
+            IconSize = panel.Add(new MenuSlider("Size", 50, 10, 100));
             foreach (var ability in list)
             {
                 var abilityMenu = Menu.Add(new Core.Managers.Menu.Items.Menu(ability.DisplayName));
@@ -38,23 +41,28 @@ namespace O9K.AIO.Heroes.Invoker.Modes
                 var enableSwitcher = new MenuSwitcher("Enabled", "Enabled" + SimplifiedName);
                 var invokeKey = new MenuHoldKey("Invoke key");
                 var ignore = new MenuSwitcher("Ignore invisibility", defaultValue: false);
-                var useAfter = new MenuSwitcher("UseAfterInvoke", defaultValue: false);
-                // var reInvoke = new MenuSwitcher("ReInvoke if on last slot", defaultValue: true);
+                var useAfter = new MenuSwitcher("Use after invoke", defaultValue: false);
+                var useIfInvoked = new MenuSwitcher("Use if invoked", defaultValue: false);
+                var reInvoke = new MenuSwitcher("ReInvoke if on last slot", defaultValue: true);
                 abilityMenu.Add(enableSwitcher);
                 abilityMenu.Add(invokeKey);
                 abilityMenu.Add(ignore);
                 abilityMenu.Add(useAfter);
-                // abilityMenu.Add(reInvoke);
+                abilityMenu.Add(useIfInvoked);
+                abilityMenu.Add(reInvoke);
                 AbilityPanelItems.Add(ability.Id, new AbilityPanelItem()
                 {
                     Enable = enableSwitcher,
                     InvokeKey = invokeKey,
                     Ignore = ignore,
                     UseAfter = useAfter,
-                    // ReInvoke = reInvoke,
+                    UseIfInvoked = useIfInvoked,
+                    ReInvoke = reInvoke,
                 });
             }
         }
+
+        public MenuSlider IconSize { get; set; }
 
         public MenuSlider PanelPositionY { get; set; }
 

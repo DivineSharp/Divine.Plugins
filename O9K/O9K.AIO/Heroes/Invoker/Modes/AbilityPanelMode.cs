@@ -64,7 +64,7 @@ namespace O9K.AIO.Heroes.Invoker.Modes
             if (!ModeMenu.isVisible)
                 return;
 
-            var size = new Vector2(ModeMenu.AbilityPanelItems.Count * 50, 50);
+            var size = new Vector2(ModeMenu.AbilityPanelItems.Count * ModeMenu.IconSize, ModeMenu.IconSize);
             var startPos = new RectangleF(ModeMenu.PanelPositionX, ModeMenu.PanelPositionY, size.X, size.Y);
             RendererManager.DrawFilledRectangle(startPos, Color.Black, new Color(0, 0, 0, 100), 1);
 
@@ -82,6 +82,7 @@ namespace O9K.AIO.Heroes.Invoker.Modes
                     if (ability.CanBeCasted())
                     {
                         RendererManager.DrawText(item.InvokeKey.Key.ToString(), rect, Color.White, FontFlags.VerticalCenter | FontFlags.Center, 15);
+                        RendererManager.DrawFilledRectangle(rect, Color.White, new Color(0, 0, 0, 50), 1);
                     }
                     else
                     {
@@ -92,6 +93,45 @@ namespace O9K.AIO.Heroes.Invoker.Modes
                 }
                 currentPos.X += size.Y;
             });
+        }
+
+        private bool UseAbility(IInvokableAbility ability, AbilityId id)
+        {
+            if (ability is ActiveAbility activeAbility && activeAbility.CanBeCasted())
+            {
+                switch (id)
+                {
+                    case AbilityId.invoker_alacrity:
+                    {
+                        return activeAbility.UseAbility(Owner);
+                        break;
+                    }
+                    case AbilityId.invoker_chaos_meteor:
+                    case AbilityId.invoker_deafening_blast:
+                    case AbilityId.invoker_emp:
+                    case AbilityId.invoker_sun_strike:
+                    case AbilityId.invoker_tornado:
+                    {
+                        activeAbility.UseAbility(GameManager.MousePosition);
+                        break;
+                    }
+                    case AbilityId.invoker_cold_snap:
+                    {
+                        if (TargetManager.HasValidTarget)
+                            return activeAbility.UseAbility(this.TargetManager.Target);
+                        break;
+                    }
+                    case AbilityId.invoker_forge_spirit:
+                    case AbilityId.invoker_ghost_walk:
+                    case AbilityId.invoker_ice_wall:
+                    {
+                        return activeAbility.UseAbility();
+                        break;
+                    }
+                }
+            }
+
+            return false;
         }
 
         protected override void Execute()
@@ -106,55 +146,31 @@ namespace O9K.AIO.Heroes.Invoker.Modes
 
             ModeMenu.AbilityPanelItems.ForEach(keyValue =>
             {
-                var id = keyValue.Key;
+                AbilityId id = keyValue.Key;
                 var item = keyValue.Value;
                 if (item.Enable && item.InvokeKey.IsActive)
                 {
-                    var ability = Owner.Hero.Abilities.FirstOrDefault(x => x.Id == id) as IInvokableAbility;
+                    IInvokableAbility ability = Owner.Hero.Abilities.FirstOrDefault(x => x.Id == id) as IInvokableAbility;
                     if (ability is not {CanBeInvoked: true})
                         return;
                     if (Owner.Hero.IsInvisible && !item.Ignore)
                         return;
                     if (ability.IsInvoked)
                     {
-                        if (ability.GetAbilitySlot == AbilitySlot.Slot_5 && invoke.CanBeCasted())
+                        if (item.UseIfInvoked)
                         {
-                            ability.Invoke();
-                            Sleeper.Sleep(.200f);
-                            return;
-                        }
-
-                        if (ability is ActiveAbility activeAbility && activeAbility.CanBeCasted())
-                        {
-                            switch (id)
+                            if (UseAbility(ability, id))
                             {
-                                case AbilityId.invoker_alacrity:
-                                {
-                                    activeAbility.UseAbility(Owner);
-                                    break;
-                                }
-                                case AbilityId.invoker_chaos_meteor:
-                                case AbilityId.invoker_deafening_blast:
-                                case AbilityId.invoker_emp:
-                                case AbilityId.invoker_sun_strike:
-                                case AbilityId.invoker_tornado:
-                                {
-                                    activeAbility.UseAbility(GameManager.MousePosition);
-                                    break;
-                                }
-                                case AbilityId.invoker_cold_snap:
-                                {
-                                    if (TargetManager.HasValidTarget)
-                                        activeAbility.UseAbility(this.TargetManager.Target);
-                                    break;
-                                }
-                                case AbilityId.invoker_forge_spirit:
-                                case AbilityId.invoker_ghost_walk:
-                                case AbilityId.invoker_ice_wall:
-                                {
-                                    activeAbility.UseAbility();
-                                    break;
-                                }
+                                Sleeper.Sleep(.300f);
+                                return;
+                            }
+                        }
+                        if (ability.GetAbilitySlot == AbilitySlot.Slot_5 && invoke.CanBeCasted() && item.ReInvoke)
+                        {
+                            if (ability.Invoke())
+                            {
+                                Sleeper.Sleep(.200f);
+                                return;
                             }
                         }
                     }
@@ -162,6 +178,12 @@ namespace O9K.AIO.Heroes.Invoker.Modes
                     {
                         ability.Invoke();
                         Sleeper.Sleep(.200f);
+                        if (item.UseAfter)
+                            UpdateManager.BeginInvoke(100, () =>
+                            {
+                                if (UseAbility(ability, id))
+                                    Sleeper.Sleep(.300f);
+                            });
                         return;
                     }
                 }
