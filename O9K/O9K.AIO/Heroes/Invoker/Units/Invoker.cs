@@ -131,6 +131,40 @@ namespace O9K.AIO.Heroes.Invoker.Units
             // this.MoveComboAbilities.Add(AbilityId.leshrac_split_earth, _ => this.splitEarth);
         }
 
+        private bool UseAbility(Unit9 target, Ability9 ability)
+        {
+            if (ability is ActiveAbility activeAbility && activeAbility.CanBeCasted())
+            {
+                switch (ability.Id)
+                {
+                    case AbilityId.invoker_alacrity:
+                    {
+                        return activeAbility.BaseAbility.Cast(Owner);
+                    }
+                    // case AbilityId.invoker_chaos_meteor:
+                    case AbilityId.invoker_deafening_blast:
+                    case AbilityId.invoker_emp:
+                    // case AbilityId.invoker_sun_strike:
+                    // case AbilityId.invoker_tornado:
+                    {
+                        return activeAbility.BaseAbility.Cast(target.Position);
+                    }
+                    case AbilityId.invoker_cold_snap:
+                    {
+                        return activeAbility.BaseAbility.Cast(target);
+                    }
+                    case AbilityId.invoker_forge_spirit:
+                    // case AbilityId.invoker_ghost_walk:
+                    // case AbilityId.invoker_ice_wall:
+                    {
+                        return activeAbility.BaseAbility.Cast();
+                    }
+                }
+            }
+
+            return false;
+        }
+
         public override bool Combo(TargetManager.TargetManager targetManager, ComboModeMenu comboModeMenu)
         {
             var abilityHelper = new InvokerAbilityHelper(targetManager, comboModeMenu, this);
@@ -179,10 +213,21 @@ namespace O9K.AIO.Heroes.Invoker.Units
                 return true;
             }
 
-            var target = targetManager.Target;
+            Unit9 target = targetManager.Target;
 
             if (target == null)
                 return false;
+
+            var freeAbilities = abilityHelper.GetInvokedAbilities();
+            foreach (var freeAbility in freeAbilities)
+            {
+                var casted = UseAbility(target, freeAbility);
+                if (casted)
+                {
+                    return true;
+                }
+            }
+
 
             if (!meteorLaunched.IsSleeping && abilityHelper.UseAbilityIfCondition(this.euls, sunStrike, meteor, /*iceWall, */emp))
             {

@@ -20,7 +20,7 @@
 
         private readonly Sleeper orbwalkSleeper;
 
-        private readonly Unit9 unit;
+        protected readonly Unit9 unit;
 
         public AbilityHelper(TargetManager targetManager, IComboModeMenu comboModeMenu, ControllableUnit controllableUnit)
         {
