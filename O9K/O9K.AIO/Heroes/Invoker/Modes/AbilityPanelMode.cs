@@ -85,8 +85,9 @@ namespace O9K.AIO.Heroes.Invoker.Modes
                     else
                     {
                         RendererManager.DrawFilledRectangle(rect, Color.White, new Color(0, 0, 0, 200), 1);
-                        
-                        RendererManager.DrawText(ability.BaseAbility.Cooldown.ToString("0.0"), rect, Color.White, FontFlags.VerticalCenter | FontFlags.Center, 15);
+                        var cd = ability.BaseAbility.Cooldown;
+                        if (cd > 0.0)
+                            RendererManager.DrawText(cd.ToString("0.0"), rect, Color.White, FontFlags.VerticalCenter | FontFlags.Center, 15);
                     }
                 }
                 currentPos.X += size.Y;
@@ -137,7 +138,7 @@ namespace O9K.AIO.Heroes.Invoker.Modes
             if (Sleeper.IsSleeping)
                 return;
             var invoke = Owner.Hero.Abilities.FirstOrDefault(x => x.Id == AbilityId.invoker_invoke);
-            if (invoke == null || !invoke.CanBeCasted())
+            if (invoke == null)
             {
                 return;
             }
@@ -174,15 +175,17 @@ namespace O9K.AIO.Heroes.Invoker.Modes
                     }
                     else
                     {
-                        ability.Invoke();
-                        Sleeper.Sleep(.200f);
-                        if (item.UseAfter)
-                            UpdateManager.BeginInvoke(100, () =>
-                            {
-                                if (UseAbility(ability, id))
-                                    Sleeper.Sleep(.300f);
-                            });
-                        return;
+                        if (ability.Invoke())
+                        {
+                            Sleeper.Sleep(.200f);
+                            if (item.UseAfter)
+                                UpdateManager.BeginInvoke(100, () =>
+                                {
+                                    if (UseAbility(ability, id))
+                                        Sleeper.Sleep(.300f);
+                                });
+                            return;
+                        }
                     }
                 }
             });
