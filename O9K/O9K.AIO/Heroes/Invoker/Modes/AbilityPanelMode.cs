@@ -1,17 +1,14 @@
 ﻿using System;
-using System.Globalization;
 using System.Linq;
+using System.Windows.Input;
 using Divine;
 using Divine.SDK.Extensions;
 using O9K.AIO.Heroes.Base;
-using O9K.AIO.Modes.Base;
 using O9K.AIO.Modes.Permanent;
 using O9K.Core.Entities.Abilities.Base;
 using O9K.Core.Entities.Abilities.Base.Components.Base;
-using O9K.Core.Entities.Abilities.Heroes.Invoker;
 using O9K.Core.Entities.Abilities.Heroes.Invoker.Helpers;
 using O9K.Core.Helpers;
-using O9K.Core.Logger;
 using O9K.Core.Managers.Menu.EventArgs;
 using SharpDX;
 
@@ -81,7 +78,8 @@ namespace O9K.AIO.Heroes.Invoker.Modes
                 {
                     if (ability.CanBeCasted())
                     {
-                        RendererManager.DrawText(item.InvokeKey.Key.ToString(), rect, Color.White, FontFlags.VerticalCenter | FontFlags.Center, 15);
+                        if (item.InvokeKey.Key != Key.None)
+                            RendererManager.DrawText(item.InvokeKey.Key.ToString(), rect, Color.White, FontFlags.VerticalCenter | FontFlags.Center, 15);
                         RendererManager.DrawFilledRectangle(rect, Color.White, new Color(0, 0, 0, 50), 1);
                     }
                     else
@@ -103,7 +101,7 @@ namespace O9K.AIO.Heroes.Invoker.Modes
                 {
                     case AbilityId.invoker_alacrity:
                     {
-                        return activeAbility.UseAbility(Owner);
+                        return activeAbility.BaseAbility.Cast(Owner);
                         break;
                     }
                     case AbilityId.invoker_chaos_meteor:
@@ -112,20 +110,20 @@ namespace O9K.AIO.Heroes.Invoker.Modes
                     case AbilityId.invoker_sun_strike:
                     case AbilityId.invoker_tornado:
                     {
-                        activeAbility.UseAbility(GameManager.MousePosition);
+                        return activeAbility.BaseAbility.Cast(GameManager.MousePosition);
                         break;
                     }
                     case AbilityId.invoker_cold_snap:
                     {
                         if (TargetManager.HasValidTarget)
-                            return activeAbility.UseAbility(this.TargetManager.Target);
+                            return activeAbility.BaseAbility.Cast(this.TargetManager.Target);
                         break;
                     }
                     case AbilityId.invoker_forge_spirit:
                     case AbilityId.invoker_ghost_walk:
                     case AbilityId.invoker_ice_wall:
                     {
-                        return activeAbility.UseAbility();
+                        return activeAbility.BaseAbility.Cast();
                         break;
                     }
                 }
@@ -157,7 +155,7 @@ namespace O9K.AIO.Heroes.Invoker.Modes
                         return;
                     if (ability.IsInvoked)
                     {
-                        if (item.UseIfInvoked)
+                        if (item.UseIfInvoked.IsEnabled)
                         {
                             if (UseAbility(ability, id))
                             {
