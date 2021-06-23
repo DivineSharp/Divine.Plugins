@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Windows.Controls;
 
 using Divine.Entity;
 using Divine.Entity.Entities.Abilities.Components;
