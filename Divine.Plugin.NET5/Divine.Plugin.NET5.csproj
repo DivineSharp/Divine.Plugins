@@ -1,0 +1,31 @@
+﻿<Project>
+
+  <PropertyGroup>
+    <AssemblyName>Divine.Plugin.NET5</AssemblyName>
+    <BaseIntermediateOutputPath>$(SolutionDir)obj\$(AssemblyName)\</BaseIntermediateOutputPath>
+  </PropertyGroup>
+
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <Platforms>x64</Platforms>
+    <Configurations>Release</Configurations>
+    <Configuration>Release</Configuration>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+    <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+
+    <OutputPath>$(SolutionDir)bin\</OutputPath>
+    <IntermediateOutputPath>$(SolutionDir)obj\$(AssemblyName)\</IntermediateOutputPath>
+  </PropertyGroup>
+
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Documents\GitHub\Divine\Divine.csproj" />
+  </ItemGroup>
+
+</Project>
