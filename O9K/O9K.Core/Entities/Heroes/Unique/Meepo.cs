@@ -3,7 +3,7 @@
     using System.Linq;
 
     using Divine;
-    //using Divine.Abilities;
+    using Divine.Spells;
 
     using Metadata;
 
@@ -18,13 +18,13 @@
                 return;
             }
 
-            /*var ult = (DividedWeStand)this.BaseUnit.Spellbook.Spells.FirstOrDefault(x => x.Id == AbilityId.meepo_divided_we_stand);
+            var ult = (DividedWeStand)this.BaseUnit.Spellbook.Spells.FirstOrDefault(x => x.Id == AbilityId.meepo_divided_we_stand);
             if (ult == null)
             {
                 return;
             }
 
-            this.MeepoIndex = ult.UnitIndex;*/
+            this.MeepoIndex = ult.UnitIndex;
         }
 
         public bool IsMainMeepo
