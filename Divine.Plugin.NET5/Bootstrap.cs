@@ -17,7 +17,7 @@ namespace Divine.Plugin
     {
         public Bootstrap()
         {
-            Console.WriteLine("Bootstrap Divine.Plugin: " + Environment.CurrentManagedThreadId);
+            //Console.WriteLine("Bootstrap Divine.Plugin: " + Environment.CurrentManagedThreadId);
         }
 
         protected override void OnActivateUnsafe()
