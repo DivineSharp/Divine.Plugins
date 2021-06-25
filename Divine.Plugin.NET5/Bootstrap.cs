@@ -13,7 +13,7 @@ using Divine.Update;
 
 namespace Divine.Plugin
 {
-    internal sealed class Bootstrap : BootstrapperFF
+    internal sealed class Bootstrap : BootstrapperFFG
     {
         public Bootstrap()
         {
