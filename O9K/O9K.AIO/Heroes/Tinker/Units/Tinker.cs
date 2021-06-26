@@ -37,7 +37,7 @@
 
         private BlinkAbility blink;
 
-        private DisableAbility hex;
+        private HexTinker hex;
 
         private DisableAbility orchid;
 
@@ -49,7 +49,7 @@
 
         private DebuffAbility veil;
 
-        private EtherealBlade ethereal;
+        private EtherealTinker ethereal;
 
         private DebuffAbility shiva;
 
@@ -67,17 +67,17 @@
 
                 { AbilityId.item_glimmer_cape, x => this.glimmer = new ShieldAbility(x) },
                 { AbilityId.item_ghost, x => this.ghost = new ShieldAbility(x) },
-                { AbilityId.item_blink, x => this.blink = new BlinkAbility(x) },
-                { AbilityId.item_swift_blink, x => this.blink = new BlinkAbility(x) },
-                { AbilityId.item_arcane_blink, x => this.blink = new BlinkAbility(x) },
-                { AbilityId.item_overwhelming_blink, x => this.blink = new BlinkAbility(x) },
-                { AbilityId.item_sheepstick, x => this.hex = new DisableAbility(x) },
+                { AbilityId.item_blink, x => this.blink = new BlinkDaggerTinker(x) },
+                { AbilityId.item_swift_blink, x => this.blink = new BlinkDaggerTinker(x) },
+                { AbilityId.item_arcane_blink, x => this.blink = new BlinkDaggerTinker(x) },
+                { AbilityId.item_overwhelming_blink, x => this.blink = new BlinkDaggerTinker(x) },
+                { AbilityId.item_sheepstick, x => this.hex = new HexTinker(x) },
                 { AbilityId.item_orchid, x => this.orchid = new DisableAbility(x) },
                 { AbilityId.item_bloodthorn, x => this.bloodthorn = new DisableAbility(x) },
                 { AbilityId.item_nullifier, x => this.nullifier = new Nullifier(x) },
                 { AbilityId.item_rod_of_atos, x => this.atos = new DisableAbility(x) },
                 { AbilityId.item_veil_of_discord, x => this.veil = new DebuffAbility(x) },
-                { AbilityId.item_ethereal_blade, x => this.ethereal = new EtherealBlade(x) },
+                { AbilityId.item_ethereal_blade, x => this.ethereal = new EtherealTinker(x) },
                 { AbilityId.item_shivas_guard, x => this.shiva = new DebuffAbility(x) },
                 { AbilityId.item_dagon_5, x => this.dagon = new NukeAbility(x) },
             };
@@ -97,7 +97,7 @@
                 return true;
             }
 
-            if (abilityHelper.UseAbility(this.blink, 300, 300))
+            if (abilityHelper.UseAbilityIfCondition(this.blink))
             {
                 return true;
             }

@@ -382,6 +382,8 @@
     <Compile Include="Heroes\Tidehunter\Units\Tidehunter.cs" />
     <Compile Include="Heroes\Tinker\Abilities\BlinkDaggerTinker.cs" />
     <Compile Include="Heroes\Tinker\Abilities\BlinkDaggerTinkerMenu.cs" />
+    <Compile Include="Heroes\Tinker\Abilities\EtherealTinker.cs" />
+    <Compile Include="Heroes\Tinker\Abilities\HexTinker.cs" />
     <Compile Include="Heroes\Tinker\Abilities\Rearm.cs" />
     <Compile Include="Heroes\Tinker\TinkerBase.cs" />
     <Compile Include="Heroes\Tinker\Units\Tinker.cs" />
