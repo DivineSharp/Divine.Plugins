@@ -380,6 +380,11 @@
     <Compile Include="Heroes\Tidehunter\Abilities\Ravage.cs" />
     <Compile Include="Heroes\Tidehunter\TidehunterBase.cs" />
     <Compile Include="Heroes\Tidehunter\Units\Tidehunter.cs" />
+    <Compile Include="Heroes\Tinker\Abilities\BlinkDaggerTinker.cs" />
+    <Compile Include="Heroes\Tinker\Abilities\BlinkDaggerTinkerMenu.cs" />
+    <Compile Include="Heroes\Tinker\Abilities\Rearm.cs" />
+    <Compile Include="Heroes\Tinker\TinkerBase.cs" />
+    <Compile Include="Heroes\Tinker\Units\Tinker.cs" />
     <Compile Include="Heroes\Timbersaw\Abilities\TimberChainBlink.cs" />
     <Compile Include="Heroes\Tiny\Abilities\Toss.cs" />
     <Compile Include="Heroes\Tiny\Abilities\TossMenu.cs" />
@@ -488,5 +493,6 @@
       <Name>O9K.Core</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -152,9 +152,9 @@
             return ability.UseAbility(this.TargetManager, this.comboSleeper, distance);
         }
 
-        public bool UseAbility(ShieldAbility ability, float distance)
+        public bool UseAbility(ShieldAbility ability, float distance, bool canHit = true)
         {
-            if (!this.CanBeCasted(ability))
+            if (!this.CanBeCasted(ability, canHit))
             {
                 return false;
             }
@@ -224,6 +224,7 @@
 
             return ability.UseAbility(this.TargetManager, this.comboSleeper, true);
         }
+
         public bool UseAbilityIfConditionWithoutCooldownCheck(UsableAbility ability, params UsableAbility[] checkAbilities)
         {
             if (!this.CanBeCasted(ability))
