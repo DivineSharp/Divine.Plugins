@@ -36,7 +36,7 @@
 
             var possibleTargets = EntityManager9.Units
                 .Where(
-                    x => x.IsHero && x.IsAlive && x.IsVisible && !x.IsMagicImmune && !x.IsInvulnerable
+                    x => x.IsEnemy() && x.IsHero && x.IsAlive && x.IsVisible && !x.IsMagicImmune && !x.IsInvulnerable
                          && x.Distance(this.Owner) < this.Radius)
                 .OrderBy(x => x.Distance(this.Owner))
                 .Take(hitCount);

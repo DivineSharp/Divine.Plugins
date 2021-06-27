@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     using Base;
 
@@ -87,6 +88,11 @@
         {
             var abilityHelper = new AbilityHelper(targetManager, comboModeMenu, this);
 
+            if (OrderManager.Orders.Count() != 0)
+            {
+                return false;
+            }
+
             if (abilityHelper.UseAbility(this.glimmer, 900, false))
             {
                 return true;
@@ -157,7 +163,7 @@
                 return true;
             }
 
-            if (abilityHelper.UseAbilityIfCondition(this.rearm, this.glimmer, ghost, blink, hex, orchid, bloodthorn, nullifier, atos, veil, ethereal, shiva, heatSeeking, dagon, laser))
+            if (abilityHelper.UseAbilityIfCondition(rearm, glimmer, ghost, blink, hex, orchid, bloodthorn, nullifier, atos, veil, ethereal, shiva, heatSeeking, dagon, laser))
             {
                 return true;
             }

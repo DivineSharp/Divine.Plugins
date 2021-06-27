@@ -1,15 +1,22 @@
 ﻿namespace O9K.AIO.Abilities
 {
     using System.Linq;
+
     using Core.Entities.Abilities.Base;
     using Core.Entities.Units;
     using Core.Helpers;
     using Core.Prediction.Data;
+
     using Divine;
+
     using Heroes.Base;
+
     using Items;
+
     using Modes.Combo;
+
     using SharpDX;
+
     using TargetManager;
 
     internal class AbilityHelper
