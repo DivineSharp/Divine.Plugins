@@ -24,7 +24,7 @@
             this.autoReturnMode = new AutoReturnMode(
                 this,
                 new PermanentModeMenu(this.Menu.RootMenu, "Auto return", "Auto use \"X return\""));
-            this.torrentStackMode = new TorrentStackMode(this, new KeyPressModeMenu(this.Menu.RootMenu, "Stack ancients"));
+            this.torrentStackMode = new TorrentStackMode(this, new KeyPressModeMenu(this.Menu.RootMenu, "Stack camps"));
         }
 
         public override void Dispose()

@@ -74,7 +74,7 @@
                 { AbilityId.item_overwhelming_blink, x => this.blink = new BlinkAbility(x) },
             };
 
-            this.ancientCamps = Context9.JungleManager.JungleCamps.Where(x => x.IsAncient).Select(x => x.CreepsPosition).ToArray();
+            this.ancientCamps = Context9.JungleManager.JungleCamps.Where(x => x.Id != 2 && x.Id != 18).Select(x => x.CreepsPosition).ToArray();
 
             ParticleManager.ParticleAdded += OnParticleAdded;
             ModifierManager.ModifierAdded += OnModifierAdded;
@@ -282,7 +282,7 @@
                 return;
             }
 
-            if (GameManager.GameTime % 60 < 59.5 - ability.GetHitTime(camp))
+            if (GameManager.GameTime % 60 < 59.3 - ability.GetHitTime(camp))
             {
                 return;
             }
