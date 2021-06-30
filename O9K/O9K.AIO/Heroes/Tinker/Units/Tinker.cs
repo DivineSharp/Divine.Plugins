@@ -168,8 +168,6 @@
                 return true;
             }
 
-            GGGG
-
             return false;
         }
 
