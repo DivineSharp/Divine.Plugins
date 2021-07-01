@@ -16,7 +16,7 @@
         public BlackHole(Ability baseAbility)
             : base(baseAbility)
         {
-            this.RadiusData = new SpecialData(baseAbility, "pull_radius");
+            this.RadiusData = new SpecialData(baseAbility, "radius");
             this.ChannelTime = baseAbility.AbilityData.GetChannelMaximumTime(0);
         }
 
