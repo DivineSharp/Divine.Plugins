@@ -30,10 +30,21 @@
         public bool BuffsOwner { get; } = true;
 
         public override bool IsInvisibility { get; } = true;
-
+       
         public float GetSpeedBuff(Unit9 unit)
         {
             return (unit.Speed * this.bonusMoveSpeedData.GetValue(this.Level)) / 100;
+        }
+
+        public override bool UseAbility(bool queue = false, bool bypass = false)
+        {
+            if (!Owner.HasAghanimShard)
+            {
+                return false;
+            }
+
+            base.UseAbility(queue, bypass);
+            return true;
         }
     }
 }
