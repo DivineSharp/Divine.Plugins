@@ -18,10 +18,10 @@
 
         public override void AddAbility(Ability9 ability)
         {
-            if (ability.Id == AbilityId.item_bottle)
-            {
-                return;
-            }
+            //if (ability.Id == AbilityId.item_bottle)
+            //{
+            //    return;
+            //}
 
             base.AddAbility(ability);
         }
