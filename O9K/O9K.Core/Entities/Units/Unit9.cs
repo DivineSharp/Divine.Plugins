@@ -213,6 +213,14 @@
             }
         }
 
+        public bool HasAghanimShard
+        {
+            get
+            {
+                return this.BaseUnit.Modifiers.Any(x => x.Name == "modifier_item_aghanims_shard");
+            }
+        }
+
         public virtual float Health
         {
             get
