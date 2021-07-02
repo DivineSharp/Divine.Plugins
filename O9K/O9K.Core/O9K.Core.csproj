@@ -70,6 +70,7 @@
     <Compile Include="Data\Loc.cs" />
     <Compile Include="Entities\Abilities\Base\Components\IUpgradable.cs" />
     <Compile Include="Entities\Abilities\Heroes\Bane\NightmareEnd.cs" />
+    <Compile Include="Entities\Abilities\Heroes\Clinkz\Strafe.cs" />
     <Compile Include="Entities\Abilities\Heroes\Clockwerk\Overclocking.cs" />
     <Compile Include="Entities\Abilities\Heroes\Dawnbreaker\SolarGuardian.cs" />
     <Compile Include="Entities\Abilities\Heroes\Dawnbreaker\Converge.cs" />
