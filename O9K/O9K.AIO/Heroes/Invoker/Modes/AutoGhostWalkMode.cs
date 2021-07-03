@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using Divine;
-using O9K.AIO.Abilities;
 using O9K.AIO.Heroes.Base;
 using O9K.AIO.Modes.Permanent;
 using O9K.Core.Entities.Abilities.Heroes.Invoker;

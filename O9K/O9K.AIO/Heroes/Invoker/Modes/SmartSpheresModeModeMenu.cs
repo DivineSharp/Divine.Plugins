@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Divine;
 using O9K.AIO.Modes.Permanent;
 using O9K.Core.Managers.Menu;

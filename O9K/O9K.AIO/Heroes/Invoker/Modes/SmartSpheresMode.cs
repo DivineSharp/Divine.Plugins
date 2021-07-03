@@ -58,6 +58,9 @@ namespace O9K.AIO.Heroes.Invoker.Modes
 
             if (Owner.Hero.IsInvisible)
                 return;
+            
+            if (args.IsCustom)
+                return;
 
             var order = args.Order.Type;
             if (order == OrderType.Cast && !args.IsCustom)

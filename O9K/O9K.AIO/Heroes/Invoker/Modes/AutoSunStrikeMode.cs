@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Divine;
 using Divine.SDK.Prediction;
@@ -93,13 +92,13 @@ namespace O9K.AIO.Heroes.Invoker.Modes
                     Speed = float.MaxValue,
                     Range = float.MaxValue,
                     Radius = sunStrike.Radius,
-                    PredictionSkillshotType = PredictionSkillshotType.SkillshotCircle
+                    PredictionSkillshotType = PredictionSkillshotType.SkillshotCircle,
                 };
 
                 input = input.WithTarget(target);
 
                 var hookOutput = PredictionManager.GetPrediction(input);
-
+                
                 var cantHitWithPrediction = hookOutput.HitChance is not (HitChance.Medium or HitChance.High or HitChance.VeryHigh) || !target.IsMoving || target.IsRotating;
 
                 if (cantHitWithPrediction && !ChainStun(target, sunStrike))
@@ -170,6 +169,37 @@ namespace O9K.AIO.Heroes.Invoker.Modes
                                                                                  && (sunStrike.CanBeInvoked || sunStrike.IsInvoked))
             {
                 var targetPosition = Vector3.Zero;
+                
+                  /*TargetManager.AllEnemyHeroes.ForEach(target =>
+                  {
+                      var input = new PredictionInput
+                      {
+                          Owner = Owner.Hero,
+                          AreaOfEffect = false,
+                          CollisionTypes = CollisionTypes.Trees | CollisionTypes.AllyCreeps | CollisionTypes.EnemyCreeps,
+                          Delay = sunStrike.CastPoint + sunStrike.ActivationDelay,
+                          Speed = float.MaxValue,
+                          Range = float.MaxValue,
+                          Radius = sunStrike.Radius,
+                          PredictionSkillshotType = PredictionSkillshotType.SkillshotCircle,
+                      };
+                  
+                      input = input.WithTarget(target);
+                  
+                      var hookOutput = PredictionManager.GetPrediction(input);
+                  
+                      if (hookOutput.HitChance == HitChance.Collision)
+                      {
+                          ParticleManager.LineParticle("key", target.Position, hookOutput.CastPosition, 50, Color.Green);
+                      }
+                      else
+                      {
+                          ParticleManager.LineParticle("key", target.Position, hookOutput.CastPosition, 50, Color.Red);
+                      }
+                      
+                      
+                  });*/
+                
                 var enemies = TargetManager.AllEnemyHeroes.Where(x => ShouldCast(x, sunStrike, ref targetPosition))
                     .OrderBy(x => x.HealthPercentage)
                     .ToList();

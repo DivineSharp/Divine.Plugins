@@ -1,4 +1,5 @@
-﻿using Divine;
+﻿using System;
+using Divine;
 using O9K.AIO.Heroes.Base;
 using O9K.AIO.Heroes.Invoker.Modes;
 using O9K.AIO.Modes.Permanent;

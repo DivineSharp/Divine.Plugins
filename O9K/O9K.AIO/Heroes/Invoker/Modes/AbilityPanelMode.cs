@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Windows.Input;
 using Divine;
 using Divine.SDK.Extensions;
@@ -9,6 +8,7 @@ using O9K.Core.Entities.Abilities.Base;
 using O9K.Core.Entities.Abilities.Base.Components.Base;
 using O9K.Core.Entities.Abilities.Heroes.Invoker.Helpers;
 using O9K.Core.Helpers;
+using O9K.Core.Logger;
 using O9K.Core.Managers.Menu.EventArgs;
 using SharpDX;
 
@@ -22,6 +22,71 @@ namespace O9K.AIO.Heroes.Invoker.Modes
         {
             ModeMenu = menu;
             Sleeper = new Sleeper();
+            
+            foreach (var modeMenuAbilityPanelItem in ModeMenu.AbilityPanelItems)
+            {
+                AbilityId id = modeMenuAbilityPanelItem.Key;
+                var item = modeMenuAbilityPanelItem.Value;
+                
+                modeMenuAbilityPanelItem.Value.InvokeKey.ValueChange += (o, args) =>
+                {
+                    if (!args.NewValue)
+                    {
+                        return;
+                    }
+                    
+                    var invoke = Owner.Hero.Abilities.FirstOrDefault(x => x.Id == AbilityId.invoker_invoke);
+                    if (invoke == null)
+                    {
+                        return;
+                    }
+
+
+                    if (!item.InvokeKey.IsActive)
+                    {
+                        return;
+                    }
+                    IInvokableAbility ability = Owner.Hero.Abilities.FirstOrDefault(x => x.Id == id) as IInvokableAbility;
+                    if (ability is not {CanBeInvoked: true})
+                        return;
+                    if (Owner.Hero.IsInvisible && !item.Ignore)
+                        return;
+                    if (ability.IsInvoked)
+                    {
+                        if (item.UseIfInvoked.IsEnabled)
+                        {
+                            if (UseAbility(ability, id))
+                            {
+                                Sleeper.Sleep(.300f);
+                                return;
+                            }
+                        }
+                        if (ability.GetAbilitySlot == AbilitySlot.Slot_5 && invoke.CanBeCasted() && item.ReInvoke)
+                        {
+                            if (ability.Invoke())
+                            {
+                                Sleeper.Sleep(.200f);
+                                return;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (ability.Invoke())
+                        {
+                            Sleeper.Sleep(.200f);
+                            if (item.UseAfter)
+                                UpdateManager.BeginInvoke(100, () =>
+                                {
+                                    if (UseAbility(ability, id))
+                                        Sleeper.Sleep(.300f);
+                                });
+                            return;
+                        }
+                    }
+
+                };
+            }
         }
 
         private void EnabledOnValueChange(object sender, SwitcherEventArgs e)
@@ -29,10 +94,26 @@ namespace O9K.AIO.Heroes.Invoker.Modes
             if (e.NewValue)
             {
                 RendererManager.Draw += RendererManagerOnDraw;
+                InputManager.MouseKeyDown += InputManagerOnMouseKeyDown;
+
             }
             else
             {
                 RendererManager.Draw -= RendererManagerOnDraw;
+                InputManager.MouseKeyDown -= InputManagerOnMouseKeyDown;
+            }
+        }
+
+        private bool IsIn(RectangleF rect, Vector2 vector2) => rect.Contains((int) vector2.X, (int) vector2.Y);
+
+        private void InputManagerOnMouseKeyDown(MouseEventArgs e)
+        {
+            var result = GetAbilityByCoordinates(e.Position);
+            if (result != null)
+            {
+                Logger.Warn($"{result.Id}");
+                ((IInvokableAbility) result).Invoke();
+                e.Process = true;
             }
         }
 
@@ -56,6 +137,35 @@ namespace O9K.AIO.Heroes.Invoker.Modes
             base.Enable();
         }
 
+        private IActiveAbility GetAbilityByCoordinates(Vector2 clickPosition)
+        {
+            var size = new Vector2(ModeMenu.AbilityPanelItems.Count * ModeMenu.IconSize, ModeMenu.IconSize);
+            var startPos = new RectangleF(ModeMenu.PanelPositionX, ModeMenu.PanelPositionY, size.X, size.Y);
+
+
+            var currentPos = new Vector2(startPos.X, startPos.Y);
+            IActiveAbility ability9 = null;
+            ModeMenu.AbilityPanelItems
+                .OrderBy(x => Owner.Hero.Abilities.FirstOrDefault(z => z.Id == x.Key)?.Cooldown)
+                .ForEach(keyValue =>
+            {
+                var id = keyValue.Key;
+                var item = keyValue.Value;
+                
+                var rect = new RectangleF(currentPos.X, currentPos.Y, size.Y, size.Y);
+
+                if (Owner.Hero.Abilities.FirstOrDefault(x => x.Id == id) is IActiveAbility ability && item.Enable)
+                {
+                    if (IsIn(rect, clickPosition))
+                    {
+                        ability9 = ability;
+                    }
+                }
+                currentPos.X += size.Y;
+            });
+            return ability9;
+        }
+
         private void RendererManagerOnDraw()
         {
             if (!ModeMenu.isVisible)
@@ -67,7 +177,7 @@ namespace O9K.AIO.Heroes.Invoker.Modes
 
 
             var currentPos = new Vector2(startPos.X, startPos.Y);
-            ModeMenu.AbilityPanelItems.ForEach(keyValue =>
+            ModeMenu.AbilityPanelItems.OrderBy(x => Owner.Hero.Abilities.FirstOrDefault(z => z.Id == x.Key)?.Cooldown).ForEach(keyValue =>
             {
                 var id = keyValue.Key;
                 var item = keyValue.Value;
@@ -135,7 +245,7 @@ namespace O9K.AIO.Heroes.Invoker.Modes
 
         protected override void Execute()
         {
-            if (Sleeper.IsSleeping)
+            /*if (Sleeper.IsSleeping)
                 return;
             var invoke = Owner.Hero.Abilities.FirstOrDefault(x => x.Id == AbilityId.invoker_invoke);
             if (invoke == null)
@@ -188,7 +298,7 @@ namespace O9K.AIO.Heroes.Invoker.Modes
                         }
                     }
                 }
-            });
+            });*/
         }
     }
 }

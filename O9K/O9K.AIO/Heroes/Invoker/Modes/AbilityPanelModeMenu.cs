@@ -3,7 +3,6 @@ using System.Linq;
 using Divine;
 using O9K.AIO.Modes.Permanent;
 using O9K.Core.Entities.Abilities.Heroes.Invoker.Helpers;
-using O9K.Core.Managers.Menu;
 using O9K.Core.Managers.Menu.Items;
 
 namespace O9K.AIO.Heroes.Invoker.Modes
